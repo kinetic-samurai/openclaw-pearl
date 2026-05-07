@@ -26,7 +26,9 @@ data class ChatCompletionRequest(
     val temperature: Double? = null,
     @SerialName("max_tokens") val maxTokens: Int? = null,
     @SerialName("max_completion_tokens") val maxCompletionTokens: Int? = null,
-    val store: Boolean = false
+    val store: Boolean = false,
+    @SerialName("tool_choice") val toolChoice: JsonElement? = null,
+    val n: Int? = null
 )
 
 @Serializable
@@ -54,10 +56,27 @@ data class ChunkDelta(
 @Serializable
 data class ChatMessage(
     val role: String,
-    val content: String? = null,
+    val content: JsonElement? = null,
+    val name: String? = null,
     @SerialName("tool_call_id") val toolCallId: String? = null,
     @SerialName("tool_calls") val toolCalls: List<ToolCall>? = null
-)
+) {
+    /**
+     * Extracts plain text content from the flexible 'content' field.
+     * Handles both simple JSON strings and complex content arrays.
+     */
+    val textContent: String
+        get() = when {
+            content == null -> ""
+            content is kotlinx.serialization.json.JsonPrimitive && content.isString -> content.content
+            content is kotlinx.serialization.json.JsonArray -> {
+                content.filterIsInstance<kotlinx.serialization.json.JsonObject>()
+                    .mapNotNull { it["text"] as? kotlinx.serialization.json.JsonPrimitive }
+                    .joinToString("\n") { it.content }
+            }
+            else -> content.toString()
+        }
+}
 
 @Serializable
 data class ToolSpec(

@@ -28,13 +28,11 @@ object GemmaFormatter {
             }
             
             sb.append("<start_of_turn>$role\n")
-            if (msg.content != null) {
-                sb.append(msg.content)
-            }
+            sb.append(msg.textContent)
             
             // Handle tool calls from previous turns
             msg.toolCalls?.forEach { call ->
-                sb.append("\n<tool_call>{\"name\": \"${call.function.name}\", \"arguments\": ${call.function.arguments}}</tool_call>")
+                sb.append("\n<tool_call>{\"tool_name\": \"${call.function.name}\", \"parameters\": ${call.function.arguments}}</tool_call>")
             }
             
             sb.append("<end_of_turn>\n")

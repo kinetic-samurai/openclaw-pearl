@@ -2,11 +2,12 @@ package dev.openclaw.pearl
 
 interface PearlRunner {
     suspend fun complete(request: ChatCompletionRequest): ChatCompletionResponse
+    suspend fun completeStreaming(request: ChatCompletionRequest, onChunk: suspend (String) -> Unit)
 }
 
 class StubPearlRunner : PearlRunner {
     override suspend fun complete(request: ChatCompletionRequest): ChatCompletionResponse {
-        val lastUserMessage = request.messages.lastOrNull { it.role == "user" }?.content.orEmpty()
+        val lastUserMessage = request.messages.lastOrNull { it.role == "user" }?.textContent ?: ""
         val availableTool = request.tools.firstOrNull()?.function
 
         val assistantMessage = if (availableTool != null && lastUserMessage.contains("tool", ignoreCase = true)) {
@@ -26,7 +27,7 @@ class StubPearlRunner : PearlRunner {
         } else {
             ChatMessage(
                 role = "assistant",
-                content = "OpenClaw Pearl bridge is alive. LiteRT-LM wiring goes here. Last user message: ${lastUserMessage.take(240)}"
+                content = kotlinx.serialization.json.JsonPrimitive("OpenClaw Pearl bridge is alive. LiteRT-LM wiring goes here. Last user message: ${lastUserMessage.take(240)}")
             )
         }
 
@@ -42,5 +43,23 @@ class StubPearlRunner : PearlRunner {
                 )
             )
         )
+    }
+
+    override suspend fun completeStreaming(request: ChatCompletionRequest, onChunk: suspend (String) -> Unit) {
+        val result = complete(request)
+        val chunk = ChatCompletionChunk(
+            id = result.id,
+            created = result.created,
+            model = result.model,
+            choices = listOf(
+                ChunkChoice(
+                    index = 0,
+                    delta = ChunkDelta(content = result.choices.firstOrNull()?.message?.textContent),
+                    finishReason = "stop"
+                )
+            )
+        )
+        val json = kotlinx.serialization.json.Json { ignoreUnknownKeys = true }
+        onChunk(json.encodeToString(ChatCompletionChunk.serializer(), chunk))
     }
 }

@@ -23,3 +23,13 @@ dependencies {
 application {
     mainClass.set("dev.openclaw.pearl.MainKt")
 }
+
+tasks.jar {
+    manifest {
+        attributes["Main-Class"] = "dev.openclaw.pearl.MainKt"
+    }
+    from({
+        configurations.runtimeClasspath.get().map { if (it.isDirectory) it else zipTree(it) }
+    })
+    duplicatesStrategy = DuplicatesStrategy.EXCLUDE
+}
