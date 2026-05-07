@@ -12,10 +12,10 @@ dependencies {
     implementation("io.ktor:ktor-server-netty-jvm:3.0.3")
     implementation("io.ktor:ktor-server-content-negotiation-jvm:3.0.3")
     implementation("io.ktor:ktor-serialization-kotlinx-json-jvm:3.0.3")
+    implementation("io.ktor:ktor-client-core:3.0.3")
+    implementation("io.ktor:ktor-client-cio:3.0.3")
+    implementation("io.ktor:ktor-client-content-negotiation:3.0.3")
     implementation("ch.qos.logback:logback-classic:1.5.16")
-
-    // Wire this in once the LiteRT-LM JVM artifact is confirmed in your environment.
-    // implementation("com.google.ai.edge.litertlm:litertlm-jvm:latest.release")
 
     testImplementation(kotlin("test"))
 }
