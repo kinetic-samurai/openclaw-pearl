@@ -10,6 +10,7 @@ import io.ktor.server.netty.Netty
 import io.ktor.server.plugins.contentnegotiation.ContentNegotiation
 import io.ktor.server.request.receive
 import io.ktor.server.response.respond
+import io.ktor.server.response.respondTextWriter
 import io.ktor.server.routing.get
 import io.ktor.server.routing.post
 import io.ktor.server.routing.routing
@@ -48,16 +49,29 @@ fun Application.pearlModule(runner: PearlRunner) {
 
         post("/v1/chat/completions") {
             val request = call.receive<ChatCompletionRequest>()
+            val result = runner.complete(request)
 
             if (request.stream) {
-                call.respond(
-                    HttpStatusCode.NotImplemented,
-                    mapOf("error" to "Streaming is planned but not implemented in the scaffold yet.")
-                )
+                call.respondTextWriter(contentType = io.ktor.http.ContentType.Text.EventStream) {
+                    val chunk = ChatCompletionChunk(
+                        id = result.id,
+                        created = result.created,
+                        model = result.model,
+                        choices = listOf(
+                            ChunkChoice(
+                                index = 0,
+                                delta = ChunkDelta(content = result.choices.firstOrNull()?.message?.content),
+                                finishReason = "stop"
+                            )
+                        )
+                    )
+                    write("data: ${Json.encodeToString(ChatCompletionChunk.serializer(), chunk)}\n\n")
+                    write("data: [DONE]\n\n")
+                }
                 return@post
             }
 
-            call.respond(runner.complete(request))
+            call.respond(result)
         }
     }
 }

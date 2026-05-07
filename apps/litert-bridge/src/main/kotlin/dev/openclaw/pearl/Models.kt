@@ -24,7 +24,31 @@ data class ChatCompletionRequest(
     val tools: List<ToolSpec> = emptyList(),
     val stream: Boolean = false,
     val temperature: Double? = null,
-    @SerialName("max_tokens") val maxTokens: Int? = null
+    @SerialName("max_tokens") val maxTokens: Int? = null,
+    @SerialName("max_completion_tokens") val maxCompletionTokens: Int? = null,
+    val store: Boolean = false
+)
+
+@Serializable
+data class ChatCompletionChunk(
+    val id: String,
+    val `object`: String = "chat.completion.chunk",
+    val created: Long,
+    val model: String,
+    val choices: List<ChunkChoice>
+)
+
+@Serializable
+data class ChunkChoice(
+    val index: Int,
+    val delta: ChunkDelta,
+    @SerialName("finish_reason") val finishReason: String? = null
+)
+
+@Serializable
+data class ChunkDelta(
+    val role: String? = null,
+    val content: String? = null
 )
 
 @Serializable
