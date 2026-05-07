@@ -1,0 +1,15 @@
+{
+  "agents": {
+    "defaults": {
+      "model": {
+        "primary": "openclaw-pearl/gemma-4-e2b-it"
+      }
+    }
+  },
+  "providers": {
+    "openclaw-pearl": {
+      "baseUrl": "http://127.0.0.1:8765/v1",
+      "model": "gemma-4-e2b-it"
+    }
+  }
+}
