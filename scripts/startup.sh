@@ -37,8 +37,10 @@ touch turbo_serve.log bridge.log
 > turbo_serve.log
 > bridge.log
 
-echo -e "${GREEN}🚀 Starting LiteRT-LM Server...${NC}"
-python3 -u apps/litert-bridge/turbo_serve.py --backend cpu --port 9379 > turbo_serve.log 2>&1 &
+MAX_TOKENS=${LITERT_MAX_TOKENS:-8192}
+
+echo -e "${GREEN}🚀 Starting LiteRT-LM Server (Context: ${MAX_TOKENS})...${NC}"
+python3 -u apps/litert-bridge/turbo_serve.py --backend cpu --port 9379 --max-tokens "$MAX_TOKENS" > turbo_serve.log 2>&1 &
 LITERT_PID=$!
 
 echo -e "${GREEN}🚀 Starting Kotlin Bridge...${NC}"
