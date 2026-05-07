@@ -152,9 +152,13 @@ class LiteRTPearlRunner : PearlRunner {
                 null
             } ?: return@mapIndexedNotNull null
 
+            println("DEBUG: Tool JSON: $toolJson")
             val name = toolJson["tool_name"]?.jsonPrimitive?.content
                 ?: toolJson["name"]?.jsonPrimitive?.content
-                ?: "unknown"
+                ?: toolJson["type"]?.jsonPrimitive?.content
+                ?: toolJson["call"]?.jsonPrimitive?.content
+                ?: toolJson["tool"]?.jsonPrimitive?.content
+                ?: if (toolJson.containsKey("command")) "shell_execute" else "unknown"
             val params = toolJson["parameters"]?.toString()
                 ?: toolJson["arguments"]?.toString()
                 ?: "{}"

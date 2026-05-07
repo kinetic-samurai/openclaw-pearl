@@ -1,0 +1,24 @@
+{
+  "pluginId": "pearl-local",
+  "name": "OpenClaw Pearl",
+  "description": "Local Gemma 4 E2B provider bridge via LiteRT-LM",
+  "type": "provider",
+  "main": "./dist/index.js",
+  "provider": {
+    "pluginId": "pearl-local",
+    "label": "OpenClaw Pearl",
+    "models": [
+      {
+        "id": "pearl-local/gemma-4-e2b-it",
+        "name": "Gemma 4 E2B IT via LiteRT-LM"
+      }
+    ]
+  },
+  "configSchema": {
+    "type": "object",
+    "properties": {}
+  },
+  "startup": {
+    "deferConfiguredChannelFullLoadUntilAfterListen": true
+  }
+}

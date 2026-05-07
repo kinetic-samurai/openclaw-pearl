@@ -11,11 +11,22 @@
     "check": "tsc -p tsconfig.json --noEmit"
   },
   "openclaw": {
-    "extensions": ["./dist/index.js"],
-    "providers": ["openclaw-pearl"]
+    "extensions": [
+      "./dist/index.js"
+    ],
+    "providers": [
+      "openclaw-pearl"
+    ],
+    "compat": {
+      "pluginApi": ">=2026.3.24-beta.2",
+      "minGatewayVersion": "2026.3.24-beta.2"
+    },
+    "startup": {
+      "deferConfiguredChannelFullLoadUntilAfterListen": true
+    }
   },
-  "dependencies": {},
   "devDependencies": {
+    "openclaw": "^2026.5.6",
     "typescript": "^5.7.3"
   }
 }

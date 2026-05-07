@@ -22,7 +22,7 @@ import kotlinx.serialization.json.Json
 fun main() {
     val host = System.getenv("BRIDGE_HOST") ?: "127.0.0.1"
     val port = System.getenv("BRIDGE_PORT")?.toIntOrNull() ?: 8765
-    val runner = LiteRTPearlRunner()
+    val runner = TurboLiteRTPearlRunner()
 
     embeddedServer(Netty, port = port, host = host) {
         pearlModule(runner)
