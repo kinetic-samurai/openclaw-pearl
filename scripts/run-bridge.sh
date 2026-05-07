@@ -2,4 +2,4 @@
 set -euo pipefail
 
 cd "$(dirname "$0")/../apps/litert-bridge"
-exec ./gradlew run
+exec gradle run
