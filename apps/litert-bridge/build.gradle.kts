@@ -13,11 +13,6 @@ java {
     }
 }
 
-repositories {
-    mavenCentral()
-    google()
-}
-
 dependencies {
     implementation("io.ktor:ktor-server-core-jvm:3.0.3")
     implementation("io.ktor:ktor-server-netty-jvm:3.0.3")
