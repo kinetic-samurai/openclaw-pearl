@@ -1,0 +1,25 @@
+# dependencies
+node_modules/
+.pnpm-store/
+
+# builds
+dist/
+build/
+.gradle/
+
+# Kotlin / JVM
+*.class
+*.jar
+*.war
+*.ear
+.gradle-cache/
+
+# local env
+.env
+.env.*
+!.env.example
+
+# OS / editors
+.DS_Store
+.idea/
+.vscode/
